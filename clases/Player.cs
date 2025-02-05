@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace clases.Properties
@@ -8,12 +9,6 @@ namespace clases.Properties
         public string Nombre { get; set; }
         private List<Carta> _mazo { get; set; } // player's cards in hand
         
-        public Player()
-        {
-            Nombre = new string();
-        }
-        
-        
         // Constructor
         public Player(string nombre)
         {
@@ -22,9 +17,33 @@ namespace clases.Properties
         }
         
         //methods
+        
         public void RecibeCartas(Carta carta)
         {
             _mazo.Add(carta);
+        }
+        
+        public void MuestraMano()
+        {
+            Console.WriteLine($"{Nombre}'s Hand:");
+            foreach (var card in _mazo)
+            {
+                Console.WriteLine(card);
+            }
+            Console.WriteLine();
+        }
+
+        public Carta JuegaCarta() //Todos los jugadores sacan la primera carta de su paquete.
+        {
+            Carta primeraCarta = _mazo[0];
+            _mazo.RemoveAt(0);
+            return primeraCarta;
+        }
+        
+        public bool TieneCartas()
+        {
+            if (_mazo.Count > 0)
+                return true;
         }
         
     }

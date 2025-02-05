@@ -109,12 +109,5 @@ namespace clases
             return cartasRobadas;
 
         }
-
-        public List<Carta> RepartirCartas()
-        {
-            
-        }
-        
-     
     }
 }

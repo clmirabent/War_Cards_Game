@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using clases.Properties;
 
 namespace clases
 {
@@ -7,11 +8,15 @@ namespace clases
     {
         public static void Main(string[] args)
         {
-            bool player1 = false;
-            
           
           Baraja objetoBaraja = Baraja.CrearBarajasEspanolas();
           objetoBaraja.Mostrar();
+          
+          List<string> playerNames = new List<string> { "Alice", "Bob", "Charlie", "David" };
+
+          GameMaster game = new GameMaster(playerNames);
+          game.RepartirCartas();  // Reparte cartas a los jugadores
+          
           
           objetoBaraja.Barajar();
           objetoBaraja.Mostrar();
@@ -23,15 +28,7 @@ namespace clases
           {
               Console.WriteLine(carta);
           }
-
-
-
-        
-        
-
+        }
         }
     }
     
-    
-    
-}
