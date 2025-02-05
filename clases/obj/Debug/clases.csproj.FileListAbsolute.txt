@@ -1,0 +1,6 @@
+/Users/clm/RiderProjects/clases/clases/bin/Debug/clases.exe
+/Users/clm/RiderProjects/clases/clases/bin/Debug/clases.pdb
+/Users/clm/RiderProjects/clases/clases/obj/Debug/clases.csproj.AssemblyReference.cache
+/Users/clm/RiderProjects/clases/clases/obj/Debug/clases.csproj.CoreCompileInputs.cache
+/Users/clm/RiderProjects/clases/clases/obj/Debug/clases.exe
+/Users/clm/RiderProjects/clases/clases/obj/Debug/clases.pdb
