@@ -10,6 +10,8 @@ namespace clases.Properties
 
         private List<Player> _players;
         private Baraja _mazoParaJugar;
+        private Dictionary<Player, Carta> cartasPorJugador = new Dictionary<Player, Carta>();
+        List<Player> judadoresEmpatados = new List<Player>();
 
         private int _cartasPorJugador;
         private int _numeroDeTurno;
@@ -72,16 +74,17 @@ namespace clases.Properties
             {
                 Console.WriteLine("El numero de Ronda Actual es: " + (numeroDeRondaActual + 1));
                 JugarRonda();
+                if (judadoresEmpatados.Count > 0)
+                {
+                    JugarRonda();
+                }
                 numeroDeRondaActual++;
             } while (numeroDeRondaActual < _numeroDeTurno);
         }
 
-        private Player JugarRonda() //esto deveuleve el ganador de la ronda
+        private Player JugarRonda() //esto devuelve el ganador de la ronda
         {
             List<Carta> CartasJugadas = new List<Carta>();
-            //diccionario done la clave es un Player y el valor es una Carta.
-            Dictionary<Player, Carta> cartasPorJugador = new Dictionary<Player, Carta>();
-
 
             foreach (var player in _players)
             {
@@ -93,21 +96,40 @@ namespace clases.Properties
 
                 Console.WriteLine($"{player.Nombre} juega {cartaJugada}");
             }
+
             // Ordena las cartas de mayor a menor.
             // Coge la primera (la más alta).
             // Devuelve el jugador que jugó esa carta.
             Player ganador = cartasPorJugador.OrderByDescending(element => (int)element.Value.Valor).First().Key;
             Console.WriteLine($"El ganador de la ronda es: {ganador.Nombre}");
-            
-                ganador.RecibeCartas(CartasJugadas);
+
+            ganador.RecibeCartas(CartasJugadas);
+
             return ganador;
         }
-        
+
+        private void Empate()
+        {
+            HashSet<Carta> seenCartas = new HashSet<Carta>();
+            bool empateDetectado = false;
+            foreach (var pair in cartasPorJugador)
+            {
+                if (seenCartas.Contains(pair.Value))
+                {
+                    Console.WriteLine("Hay un empate!");
+                    judadoresEmpatados.Add(pair.Key);
+                    empateDetectado = true;
+                }
+                else
+                {
+                    seenCartas.Add(pair.Value);
+                }
+            }
+
+            if (!empateDetectado)
+            {
+                Console.WriteLine("No hay empate.");
+            }
+        }
     }
 }
-
-
-       
-
-
-    
