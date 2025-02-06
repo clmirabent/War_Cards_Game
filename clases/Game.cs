@@ -87,26 +87,25 @@ namespace clases.Properties
             {
                 Console.WriteLine("El numero de Ronda Actual es: " + (numeroDeRondaActual + 1));
                 JugarRonda();
-                
-                // Cuando solo queda un jugador, es el ganador
-                
-                var mostFrequentWinner = ganadoresPorRondas
-                    .GroupBy(i => i.Nombre)
-                    .OrderByDescending(g => g.Count())
-                    .FirstOrDefault();
 
-                if (mostFrequentWinner != null)
-                {
-                    Console.WriteLine($"El ganador del juego es: {mostFrequentWinner.Key}");
-                }
-                else if (judadoresEmpatados.Count > 0)
+                if (judadoresEmpatados.Count > 0)
                 {
                     JugarRonda();
-                }
+                } 
+                // Cuando solo queda un jugador, es el ganador
+                
                 numeroDeRondaActual++;
             } while (numeroDeRondaActual < _numeroDeTurno);
             
-          
+            var mostFrequentWinner = ganadoresPorRondas
+                .GroupBy(i => i.Nombre)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault();
+
+            if (mostFrequentWinner != null)
+            {
+                Console.WriteLine($"----- EL GANADOR DEL JUEGO ES:----- {mostFrequentWinner.Key}");
+            }
         }
         
       
