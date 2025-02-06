@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace clases.Properties
 {
@@ -8,73 +9,104 @@ namespace clases.Properties
         //atributes
 
         private List<Player> _players;
-        private Baraja _cartas;
+        private Baraja _mazoParaJugar;
+
+        private int _cartasPorJugador;
+        private int _numeroDeTurno;
 
         //contstructor
         public GameMaster(List<string> playerNames)
         {
             _players = new List<Player>();
-            _cartas = new Baraja(); //start game with empty hand
-            _cartas.Barajar(); // Mezclar el mazo antes de empezar
 
             // Crear jugadores y asignarles un nombre
             foreach (var name in playerNames)
             {
                 _players.Add(new Player(name));
             }
+
+            _mazoParaJugar = Baraja.CrearBarajasEspanolas();
+            _mazoParaJugar.Barajar();
+
+            _cartasPorJugador = _mazoParaJugar.CantidadDeCartas / _players.Count; // Cartas que recibe cada jugador
+            _numeroDeTurno = _cartasPorJugador;
         }
 
         public void RepartirCartas()
         {
-            Baraja _cartas = Baraja.CrearBarajasEspanolas();
-            int numPlayers = _players.Count; // Número de jugadores
+            int totalDeJugadores = _players.Count; // Número de jugadores
 
-            int totalCards = _cartas.MazoCartas.Count; //numero total del mazo
+            int totalDeCartas = _mazoParaJugar.CantidadDeCartas; //numero total de cartas en el mazo
 
-            if (numPlayers == 0)
+            if (totalDeJugadores == 0)
             {
                 Console.WriteLine("No hay jugadores en la partida.");
                 return;
             }
 
-            int cardsPerPlayer = totalCards / numPlayers; // Cartas que recibe cada jugador
-            int cardsToDeal = cardsPerPlayer * numPlayers; // Total de cartas que se repartirán
+            int cartasARepartir = _cartasPorJugador * totalDeJugadores; // Total de cartas que se repartirán
 
-            Console.WriteLine($"Repartiendo {cardsPerPlayer} cartas a cada jugador...");
+            Console.WriteLine($"Repartiendo {_cartasPorJugador} cartas a cada jugador...");
 
             // Repartir las cartas a los jugadores
             foreach (var player in _players)
             {
-                for (int i = 0; i < cardsPerPlayer; i++)
-                {
-                    Carta drawnCard = _cartas.RobarCarta();
-                    player.RecibeCartas(drawnCard);
-                }
+                List<Carta> cartaRecibidas = _mazoParaJugar.RobarCartas(_cartasPorJugador);
+                player.RecibeCartas(cartaRecibidas);
             }
 
             // Descarta las cartas sobrantes
-            int discardedCards = totalCards - cardsToDeal;
-            for (int i = 0; i < discardedCards; i++)
-            {
-                _cartas.RobarCarta(); //  robamos y no asignamos
-            }
+            int cartasApartadas = totalDeCartas - cartasARepartir;
 
-            Console.WriteLine($"Se han descartado {discardedCards} cartas.");
+            _mazoParaJugar.RobarCartas(cartasApartadas); //  se roba y no se asigna
+
+            Console.WriteLine($"Se han descartado {cartasApartadas} cartas.");
         }
 
-        // Mostrar todas las manos de los jugadores
-  
 
-        public void TurnoPartida()
+        public void JugarPartida()
         {
-            
+            Console.WriteLine("Empezó el juego");
+            int numeroDeRondaActual = 0;
+            do
+            {
+                Console.WriteLine("El numero de Ronda Actual es: " + (numeroDeRondaActual + 1));
+                JugarRonda();
+                numeroDeRondaActual++;
+            } while (numeroDeRondaActual < _numeroDeTurno);
         }
+
+        private Player JugarRonda() //esto deveuleve el ganador de la ronda
+        {
+            List<Carta> CartasJugadas = new List<Carta>();
+            //diccionario done la clave es un Player y el valor es una Carta.
+            Dictionary<Player, Carta> cartasPorJugador = new Dictionary<Player, Carta>();
+
+
+            foreach (var player in _players)
+            {
+                player.MuestraMano(); // Muestra su mano
+                Carta cartaJugada = player.JuegaCarta(); // el jugador juega su carta
+
+                CartasJugadas.Add(cartaJugada); // se añade la carta a la lista
+                cartasPorJugador[player] = cartaJugada;
+
+                Console.WriteLine($"{player.Nombre} juega {cartaJugada}");
+            }
+            // Ordena las cartas de mayor a menor.
+            // Coge la primera (la más alta).
+            // Devuelve el jugador que jugó esa carta.
+            Player ganador = cartasPorJugador.OrderByDescending(element => (int)element.Value.Valor).First().Key;
+            Console.WriteLine($"El ganador de la ronda es: {ganador.Nombre}");
+            
+                ganador.RecibeCartas(CartasJugadas);
+            return ganador;
+        }
+        
     }
 }
 
 
-
-// Método para iniciar el juego
        
 
 

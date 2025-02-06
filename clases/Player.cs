@@ -7,44 +7,55 @@ namespace clases.Properties
     {
         //atributes 
         public string Nombre { get; set; }
-        private List<Carta> _mazo { get; set; } // player's cards in hand
+        private List<Carta> _mano { get; set; } // player's cards in hand
+        private int _puntos;
         
         // Constructor
         public Player(string nombre)
         {
             Nombre = nombre;
-            _mazo = new List<Carta>(); // Initialize an empty hand
+            _mano = new List<Carta>(); // Initialize an empty hand
+            _puntos = 0;
         }
         
         //methods
         
-        public void RecibeCartas(Carta carta)
+        public void RecibeCarta(Carta carta)
         {
-            _mazo.Add(carta);
+            _mano.Add(carta);
+        }
+
+        public void RecibeCartas(List<Carta> cartas)
+        {
+            _mano.AddRange(cartas);
         }
         
         public void MuestraMano()
         {
             Console.WriteLine($"{Nombre}'s Hand:");
-            foreach (var card in _mazo)
+            foreach (var card in _mano)
             {
                 Console.WriteLine(card);
             }
             Console.WriteLine();
         }
 
-        public Carta JuegaCarta() //Todos los jugadores sacan la primera carta de su paquete.
+        public Carta JuegaCarta() //cada jugador saca la primera carta de su mano.
         {
-            Carta primeraCarta = _mazo[0];
-            _mazo.RemoveAt(0);
+            Carta primeraCarta = _mano[0];
+            _mano.RemoveAt(0);
             return primeraCarta;
         }
         
         public bool TieneCartas()
         {
-            if (_mazo.Count > 0)
-                return true;
+            return _mano.Count > 0;
+            
         }
-        
+
+        public void SumarPunto()
+        {
+            _puntos++;
+        }
     }
 }

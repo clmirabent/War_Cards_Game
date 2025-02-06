@@ -16,6 +16,11 @@ namespace clases
             get => _cartas;
         }
 
+        public int CantidadDeCartas
+        {
+            get => _cartas.Count;
+        }
+
         public Baraja()
         {
             _cartas = new List<Carta>();
@@ -41,19 +46,6 @@ namespace clases
                 Console.WriteLine(cartasObtenidas);
             }
         }
-
-        /*public void MostrarEnN()
-        {
-            int N;
-            while (!(int.TryParse(Console.ReadLine(), out N) && N > 0))
-            {
-                Console.WriteLine("Invalid input. Please enter a positive integer.");
-            }
-
-            //get the mazo cartas 
-            MazoCartas = new List<Carta>();
-        }*/
-        
 
         public static Baraja CrearBarajasEspanolas()
         {
