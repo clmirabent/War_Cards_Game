@@ -30,7 +30,7 @@ namespace clases.Properties
             _mazoParaJugar = Baraja.CrearBarajasEspanolas();
             _mazoParaJugar.Barajar();
 
-            _cartasPorJugador = _mazoParaJugar.CantidadDeCartas / _players.Count; // Cartas que recibe cada jugador
+            _cartasPorJugador = Math.Max(1, _mazoParaJugar.CantidadDeCartas / _players.Count); // Cartas que recibe cada jugador
             _numeroDeTurno = _cartasPorJugador;
         }
 
@@ -45,6 +45,13 @@ namespace clases.Properties
                 Console.WriteLine("No hay jugadores en la partida.");
                 return;
             }
+            
+            if (totalDeJugadores > totalDeCartas)
+            {
+                Console.WriteLine("Error: Hay más jugadores que cartas en el mazo. No se puede repartir.");
+                return;
+            }
+            
 
             int cartasARepartir = _cartasPorJugador * totalDeJugadores; // Total de cartas que se repartirán
 
@@ -53,18 +60,24 @@ namespace clases.Properties
             // Repartir las cartas a los jugadores
             foreach (var player in _players)
             {
-                List<Carta> cartaRecibidas = _mazoParaJugar.RobarCartas(_cartasPorJugador);
-                player.RecibeCartas(cartaRecibidas);
+                if (_mazoParaJugar.CantidadDeCartas >= _cartasPorJugador)
+                {
+                    List<Carta> cartaRecibidas = _mazoParaJugar.RobarCartas(_cartasPorJugador);
+                    player.RecibeCartas(cartaRecibidas);
+                }
+                else
+                    Console.WriteLine($"Error: No hay suficientes cartas para repartir a {player.Nombre}.");
             }
 
             // Descarta las cartas sobrantes
             int cartasApartadas = totalDeCartas - cartasARepartir;
-
-            _mazoParaJugar.RobarCartas(cartasApartadas); //  se roba y no se asigna
-
-            Console.WriteLine($"Se han descartado {cartasApartadas} cartas.");
+            if (cartasApartadas > 0)
+            {
+                _mazoParaJugar.RobarCartas(cartasApartadas);
+                Console.WriteLine($"Se han descartado {cartasApartadas} cartas.");
+            }
         }
-
+        
 
         public void JugarPartida()
         {
