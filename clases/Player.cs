@@ -46,7 +46,6 @@ namespace clases.Properties
             _mano.RemoveAt(0);
             return primeraCarta;
         }
-        
         public bool TieneCartas()
         {
             return _mano.Count > 0;

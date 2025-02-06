@@ -12,6 +12,7 @@ namespace clases.Properties
         private Baraja _mazoParaJugar;
         private Dictionary<Player, Carta> cartasPorJugador = new Dictionary<Player, Carta>();
         List<Player> judadoresEmpatados = new List<Player>();
+        List<Player> ganadoresPorRondas = new List<Player>();
 
         private int _cartasPorJugador;
         private int _numeroDeTurno;
@@ -78,7 +79,6 @@ namespace clases.Properties
             }
         }
         
-
         public void JugarPartida()
         {
             Console.WriteLine("Empezó el juego");
@@ -87,13 +87,29 @@ namespace clases.Properties
             {
                 Console.WriteLine("El numero de Ronda Actual es: " + (numeroDeRondaActual + 1));
                 JugarRonda();
-                if (judadoresEmpatados.Count > 0)
+                
+                // Cuando solo queda un jugador, es el ganador
+                
+                var mostFrequentWinner = ganadoresPorRondas
+                    .GroupBy(i => i.Nombre)
+                    .OrderByDescending(g => g.Count())
+                    .FirstOrDefault();
+
+                if (mostFrequentWinner != null)
+                {
+                    Console.WriteLine($"El ganador del juego es: {mostFrequentWinner.Key}");
+                }
+                else if (judadoresEmpatados.Count > 0)
                 {
                     JugarRonda();
                 }
                 numeroDeRondaActual++;
             } while (numeroDeRondaActual < _numeroDeTurno);
+            
+          
         }
+        
+      
 
         private Player JugarRonda() //esto devuelve el ganador de la ronda
         {
@@ -101,7 +117,7 @@ namespace clases.Properties
 
             foreach (var player in _players)
             {
-                player.MuestraMano(); // Muestra su mano
+                //player.MuestraMano(); // Muestra su mano
                 Carta cartaJugada = player.JuegaCarta(); // el jugador juega su carta
 
                 CartasJugadas.Add(cartaJugada); // se añade la carta a la lista
@@ -117,7 +133,9 @@ namespace clases.Properties
             Console.WriteLine($"El ganador de la ronda es: {ganador.Nombre}");
 
             ganador.RecibeCartas(CartasJugadas);
-
+            
+            ganadoresPorRondas.Add(ganador);
+            
             return ganador;
         }
 
